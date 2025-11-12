@@ -1,59 +1,195 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# True Compliance API - Tech Test Submission
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is my submission for the True Compliance technical test, built with Laravel 12.
 
-## About Laravel
+The API fulfills all the requirements specified in the brief, providing RESTful endpoints for managing properties, certificates, and their associated notes, all backed by a MySQL database.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 1. The Original Task
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1.  Using Laravel, MySQL and the enclosed data create an API that serves data to the following endpoints:
 
-## Learning Laravel
+    `GET /property` - Returns properties
+    `GET /property/{id}` - Returns a property
+    `POST /property` - Creates a new property
+    `PATCH /property/{id}` - Updates a property
+    `DELETE /property/{id}` - Deletes a property
+    `GET /property/{id}/certificate` - Returns the certificates of a property
+    `GET /property/{id}/note` - Returns the notes of a property
+    `POST /property/{id}/note` - Creates a note for a property
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+    `GET /certificate` - Returns certificates
+    `GET /certificate/{id}` - Returns a certificate
+    `POST /certificate` - Creates a certificate
+    `GET /certificate/{id}/note` - Returns the notes of a certificate
+    `POST /certificate/{id}/note` - Creates a note for a certificate
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2.  Write a MySQL raw query & eloquent query to get properties which has more than 5 certificates.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 2. Setup & Installation
 
-### Premium Partners
+### Prerequisites
+* **PHP >= 8.2**
+* **Composer**
+* **MySQL**
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Step-by-Step Setup
 
-## Contributing
+1.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/Timmsy1998/true-compliance-api.git
+    cd true-compliance-api
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2.  **Install Dependencies:**
+    ```bash
+    composer install
+    ```
 
-## Code of Conduct
+3.  **Create an empty MySQL database** (e.g., `true_compliance_test`).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4.  **Create `.env` File:**
+    Copy the example environment file and fill in your database details.
+    ```bash
+    cp .env.example .env
+    ```
 
-## Security Vulnerabilities
+5.  **Edit `.env`:**
+    Update the `DB_` variables to match your MySQL setup
+    ```ini
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=true_compliance_test
+    DB_USERNAME=root
+    DB_PASSWORD=password
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    # It's also recommended to set the session driver to 'file'
+    SESSION_DRIVER=file
+    ```
 
-## License
+6.  **Generate App Key:**
+    ```bash
+    php artisan key:generate
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+7.  **Run Database Migrations:**
+    This will build the schema (`properties`, `certificates`, `notes`, etc.).
+    ```bash
+    php artisan migrate:fresh
+    ```
+
+8.  **Import Data:**
+    Import the provided `datadump.sql` file (which should be placed in `database/dump/`).
+    ```bash
+    mysql -u [your_db_user] -p [your_db_name] < database/dump/datadump.sql
+    ```
+
+9.  **Clear Caches:**
+    ```bash
+    php artisan route:clear
+    php artisan config:clear
+    ```
+
+---
+
+## 3. Running the Project
+
+1.  **Start The Local Development Server**
+    ```bash
+    php artisan serve
+    ```
+
+2.  **Access the API:**
+    The API will now be running at `http://127.0.0.1:8000`.  
+    All API Endpoints are prefixed with `/api`.  
+    **Example:** `http://127.0.0.1:8000/api/property`
+---
+
+## 4. API Endpoints
+
+All endpoints are prefixed with `/api`.
+
+### Property
+| Method | URL | Action |
+| --- | --- | --- |
+| `GET` | `/property` | Returns all properties. |
+| `POST` | `/property` | Creates a new property. |
+| `GET` | `/property/{id}` | Returns a single property. |
+| `PATCH` | `/property/{id}` | Updates a property. |
+| `DELETE` | `/property/{id}` | Deletes a property. |
+| `GET` | `/property/{id}/certificate` | Returns a property's certificates. |
+| `GET` | `/property/{id}/note` | Returns a property's notes. |
+| `POST` | `/property/{id}/note` | Creates a new note for a property. |
+
+### Certificate
+| Method | URL | Action |
+| --- | --- | --- |
+| `GET` | `/certificate` | Returns all certificates. |
+| `POST` | `/certificate` | Creates a new certificate. |
+| `GET` | `/certificate/{id}` | Returns a single certificate. |
+| `GET` | `/certificate/{id}/note` | Returns a certificate's notes. |
+| `POST` | `/certificate/{id}/note` | Creates a new note for a certificate. |
+
+---
+
+## 5. Solution to Task 2
+
+**Query to get properties which has more than 5 certificates:**
+
+### Eloquent Query
+```php
+use App\Models\Property;
+
+$properties = Property::withCount('certificates')
+                      ->having('certificates_count', '>', 5)
+                      ->get();
+```
+
+### Raw MySQL Query
+```sql
+SELECT
+  properties.*,
+  COUNT(certificates.id) AS certificates_count
+FROM
+  properties
+JOIN
+  certificates ON properties.id = certificates.property_id
+GROUP BY
+  properties.id
+HAVING
+  certificates_count > 5;
+```
+
+---
+
+## 6. Design Notes
+
+* **Polymorphic Relationship:** 
+    A polymorphic relationship (`morphMany`/`morphTo`) was used for the `notes` table. This allows both `Property` and `Certificate` models to have notes using a single `notes` table, which is clean and scalable.
+
+* **Routing:**
+    The API routes in `routes/api.php` were defined manually (e.g., `Route::get('/property', ...)` ) instead of using `apiResource` to ensure the URLs *exactly* match the tech test's singular (`/property`) requirement.
+
+* **Validation:**
+    Validation rules have been added to the `store` and `update` methods in both controllers to ensure data integrity.
+
+* **Soft Deletes:**
+    `SoftDeletes` have been implemented on the `Property` and `Certificate` models to handle the `deleted_at` column in the data.
+
+
+---
+
+## 7. Statistics
+
+* **Date & Time Started:**
+    `12/11/2025 19:30`
+
+* **Date & Time Finished:**
+    `12/11/2025 20:45`
+
+* **Time Taken:**
+    `75 minutes` / `1 hour 15 minutes`
